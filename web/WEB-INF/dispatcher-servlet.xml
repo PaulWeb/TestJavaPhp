@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
+    
+    
+<!--    Most controllers will use the ControllerClassNameHandlerMapping above, but
+    for the index controller we are using ParameterizableViewController, so we must
+    define an explicit mapping for it.-->
+    
+    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+               <prop key="index.htm">welcomeController</prop>
+                <prop key="test.htm">exampleController</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="viewResolver" class="MyViewResolver">
+    <property name="tilesResolver" ref="viewResolverPhp"/>
+    <property name="jspResolver" ref="viewResolverJsp"/>
+</bean>
+    <bean id="viewResolverPhp" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+                <property name="viewClass" value="QuercusView"/>
+                <property name="prefix" value="/WEB-INF/views/"/>
+                <property name="suffix" value=".php"/>
+                
+                
+     </bean>
+    <bean id="viewResolverJsp"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:prefix="/WEB-INF/views/"
+          p:suffix=".jsp"
+          
+          />
+     <bean name="welcomeController" 
+    class="org.springframework.web.servlet.mvc.ParameterizableViewController">
+	<property name="viewName" value="index" />
+    </bean>
+    
+    <!--
+    The index controller.
+    -->
+    <bean name="exampleController"
+          class="ExampleController"
+           />
+          
+<!--    <bean name="indexController"
+          class="org.springframework.web.servlet.mvc.ParameterizableViewController"
+          p:viewName="example" />-->
+    
+</beans>
